@@ -1,0 +1,229 @@
+================================================================================
+CLASH ROYALE META ANALYSIS REPORT
+================================================================================
+
+Report Generated: December 01, 2025 at 01:25 PM
+Data Period: Oct 09, 2025 to Dec 01, 2025
+
+--------------------------------------------------------------------------------
+EXECUTIVE SUMMARY
+--------------------------------------------------------------------------------
+
+This report analyzes 13,974 competitive Clash Royale battles from 291 
+unique players. The analysis identifies the current meta trends, top-performing cards, 
+optimal card synergies, and strategic insights for competitive play.
+
+KEY FINDINGS:
+
+  • The most dominant card in the meta is Arrows 
+    with a 3.5% usage rate and 49.2% win rate.
+
+  • Fisherman is the most underrated card, achieving 
+    a 60.2% win rate despite only 0.24% usage.
+
+  • Barbarian Barrel may be overused - it has 2.2% usage 
+    but only wins 47.9% of games.
+
+  • The strongest card combination is Giant + Elite Barbarians
+    with an impressive 72.4% win rate.
+
+
+--------------------------------------------------------------------------------
+SECTION 1: CARD USAGE ANALYSIS
+--------------------------------------------------------------------------------
+
+Usage rate indicates how often a card appears in decks. A higher usage rate suggests 
+the card is considered essential or versatile by the player community.
+
+INTERPRETATION GUIDE:
+  • >3% usage: Extremely popular, likely a meta staple
+  • 2-3% usage: Very common, widely used
+  • 1-2% usage: Moderately popular
+  • <1% usage: Niche or underutilized
+
+TOP 15 MOST USED CARDS:
+--------------------------------------------------
+Rank  Card                 Rarity       Usage%  
+--------------------------------------------------
+1     Arrows               common       3.54%
+2     Valkyrie             rare         2.63%
+3     Mega Knight          legendary    2.59%
+4     Mini P.E.K.K.A       rare         2.58%
+5     Firecracker          common       2.57%
+6     The Log              legendary    2.48%
+7     Zap                  common       2.26%
+8     Barbarian Barrel     epic         2.25%
+9     Hog Rider            rare         2.19%
+10    Goblin Gang          common       1.97%
+11    Fireball             rare         1.95%
+12    Witch                epic         1.81%
+13    Skeleton Army        epic         1.74%
+14    P.E.K.K.A            epic         1.65%
+15    Electro Wizard       legendary    1.56%
+
+ANALYSIS:
+
+  The current meta favors 4 spells and 2 tanks in the top 10,
+  indicating a spell-heavy meta.
+
+
+--------------------------------------------------------------------------------
+SECTION 2: WIN RATE ANALYSIS
+--------------------------------------------------------------------------------
+
+Win rate measures how often decks containing a card win their matches. Cards with 
+win rates significantly above 50% are performing well in the current meta.
+
+INTERPRETATION GUIDE:
+  • >55% win rate: Overpowered, likely needs balancing
+  • 52-55% win rate: Strong performer
+  • 48-52% win rate: Balanced
+  • <48% win rate: Underperforming
+
+TOP 15 HIGHEST WIN RATE CARDS (min. 100 uses):
+-------------------------------------------------------
+Rank  Card                 Win Rate     Sample Size 
+-------------------------------------------------------
+1     Fisherman            60.2%       269
+2     Hunter               59.6%       478
+3     Little Prince        55.7%       309
+4     Night Witch          53.1%       435
+5     Giant Skeleton       53.1%       603
+6     Skeleton King        52.9%       601
+7     Cannon               52.6%       891
+8     The Log              52.6%       2,770
+9     Fireball             52.6%       2,179
+10    Monk                 52.6%       232
+11    Goblin Barrel        52.2%       1,738
+12    Royal Ghost          52.2%       1,242
+13    Three Musketeers     52.1%       397
+14    Skeletons            52.0%       1,713
+15    Rascals              51.9%       158
+
+ANALYSIS:
+
+  ⚠️  Fisherman has an unusually high win rate of 60.2%.
+      This card may be overpowered in the current meta.
+
+
+--------------------------------------------------------------------------------
+SECTION 3: CARD SYNERGIES
+--------------------------------------------------------------------------------
+
+Synergy analysis identifies card pairs that frequently appear together and perform 
+well as a combination. Strong synergies indicate cards that complement each other's 
+strengths and weaknesses.
+
+MOST POPULAR CARD COMBINATIONS:
+-----------------------------------------------------------------
+Card 1             Card 2             Together   Win%    
+-----------------------------------------------------------------
+Mega Knight        Firecracker        1147       52.2%
+Hog Rider          The Log            1058       49.7%
+Skeletons          The Log            1040       50.3%
+Valkyrie           Firecracker        1002       52.3%
+Goblin Barrel      The Log            993        52.2%
+Hog Rider          Firecracker        968        53.0%
+Mini P.E.K.K.A     Arrows             938        49.8%
+Ice Spirit         The Log            906        51.1%
+Mini P.E.K.K.A     Mega Knight        831        50.9%
+Tornado            Barbarian Barrel   829        41.7%
+
+
+HIGHEST WIN RATE COMBINATIONS (min. 50 games):
+-----------------------------------------------------------------
+Card 1             Card 2             Together   Win%    
+-----------------------------------------------------------------
+Giant              Elite Barbarians   58         72.4%
+Hunter             Electro Spirit     87         71.3%
+Musketeer          Skeleton King      76         71.1%
+Skeletons          Fisherman          86         70.9%
+Skeletons          Royal Ghost        141        70.9%
+Electro Wizard     Skeleton King      58         70.7%
+Hunter             Royal Ghost        179        70.4%
+Battle Ram         Skeleton King      56         69.6%
+Wizard             Elixir Collector   62         69.4%
+Royal Giant        Electro Spirit     94         69.1%
+
+
+--------------------------------------------------------------------------------
+SECTION 4: STRATEGIC INSIGHTS
+--------------------------------------------------------------------------------
+
+UNDERRATED CARDS (High win rate, low usage):
+These cards win more than 52% of games but are used in less than 1% of decks.
+Consider adding these to your deck for a competitive edge.
+
+-------------------------------------------------------
+Card                 Win Rate     Usage      Verdict        
+-------------------------------------------------------
+Fisherman            60.2%       0.24%     Hidden Gem!
+Hunter               59.6%       0.43%     Hidden Gem!
+Little Prince        55.7%       0.28%     Hidden Gem!
+Night Witch          53.1%       0.39%     Worth Trying
+Giant Skeleton       53.1%       0.54%     Worth Trying
+Skeleton King        52.9%       0.54%     Worth Trying
+Cannon               52.6%       0.80%     Worth Trying
+Monk                 52.6%       0.21%     Worth Trying
+
+
+OVERRATED CARDS (High usage, low win rate):
+These cards are popular but underperform. Consider replacing them in your deck.
+
+-------------------------------------------------------
+Card                 Win Rate     Usage      Verdict        
+-------------------------------------------------------
+Barbarian Barrel     47.9%       2.2%      Reconsider
+Hog Rider            47.7%       2.2%      Reconsider
+Electro Wizard       47.1%       1.6%      Reconsider
+Minions              45.8%       1.5%      Reconsider
+Baby Dragon          46.8%       1.4%      Reconsider
+Tornado              42.3%       1.3%      Avoid
+Inferno Dragon       46.3%       1.2%      Reconsider
+Vines                45.0%       1.2%      Reconsider
+
+
+--------------------------------------------------------------------------------
+SECTION 5: CONCLUSIONS & RECOMMENDATIONS
+--------------------------------------------------------------------------------
+
+DECK BUILDING RECOMMENDATIONS:
+
+  MUST-HAVE CARDS (Reliable high performers):
+    • Fisherman - 60.2% win rate, 0.2% usage
+    • Hunter - 59.6% win rate, 0.4% usage
+    • Little Prince - 55.7% win rate, 0.3% usage
+    • Night Witch - 53.1% win rate, 0.4% usage
+    • Giant Skeleton - 53.1% win rate, 0.5% usage
+
+  HIDDEN GEMS TO CONSIDER:
+    • Fisherman - 60.2% win rate (underused)
+    • Hunter - 59.6% win rate (underused)
+    • Little Prince - 55.7% win rate (underused)
+
+  CARDS TO AVOID:
+    • Barbarian Barrel - only 47.9% win rate despite popularity
+    • Hog Rider - only 47.7% win rate despite popularity
+    • Electro Wizard - only 47.1% win rate despite popularity
+
+  STRONGEST SYNERGIES TO BUILD AROUND:
+    • Giant + Elite Barbarians (72.4% win rate)
+    • Hunter + Electro Spirit (71.3% win rate)
+    • Musketeer + Skeleton King (71.1% win rate)
+
+
+META HEALTH ASSESSMENT:
+
+  The meta is CONCENTRATED - Top 10 cards represent 25.1% of all usage.
+  This indicates a stale meta with limited viable options.
+
+  Average card win rate: 46.5% (expected: ~50%)
+
+
+================================================================================
+END OF REPORT
+================================================================================
+
+Data source: 13,974 battles from Clash Royale API
+Analysis by: Clash Royale Meta Analyzer
+Generated: 2025-12-01 13:25:34

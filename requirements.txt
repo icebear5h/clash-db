@@ -1,0 +1,35 @@
+# Core
+python-dotenv==1.0.1
+requests==2.31.0
+pandas==2.1.4
+numpy==1.26.3
+python-dateutil==2.8.2
+
+# Database
+mysql-connector-python==8.2.0
+SQLAlchemy==2.0.25
+alembic==1.13.1
+
+# API
+fastapi==0.109.0
+uvicorn==0.27.0
+pydantic==2.5.3
+
+# Data Analysis
+scipy==1.11.4
+scikit-learn==1.4.0
+
+# Visualization
+matplotlib==3.8.2
+seaborn==0.13.1
+plotly==5.18.0
+
+# Development
+pytest==7.4.4
+black==24.1.1
+isort==5.13.2
+mypy==1.8.0
+
+# Jupyter
+jupyter==1.0.0
+notebook==7.0.7
