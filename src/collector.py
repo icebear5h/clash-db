@@ -127,28 +127,16 @@ class MetaCollector:
     # ========== Players ==========
     
     def upsert_player(self, player_data: Dict) -> Player:
-        """Create or update a player record."""
+        """Create or update a player record (just tag)."""
         tag = player_data.get('tag')
         if not tag:
             return None
         
         existing = self.db.query(Player).filter_by(player_tag=tag).first()
         if existing:
-            existing.name = player_data.get('name', existing.name)
-            existing.exp_level = player_data.get('expLevel', existing.exp_level)
-            existing.current_trophies = player_data.get('trophies', existing.current_trophies)
-            existing.best_trophies = player_data.get('bestTrophies', existing.best_trophies)
-            existing.last_seen = datetime.now()
             return existing
         else:
-            player = Player(
-                player_tag=tag,
-                name=player_data.get('name'),
-                exp_level=player_data.get('expLevel'),
-                current_trophies=player_data.get('trophies'),
-                best_trophies=player_data.get('bestTrophies'),
-                last_seen=datetime.now()
-            )
+            player = Player(player_tag=tag)
             self.db.add(player)
             return player
     
@@ -461,13 +449,6 @@ class MetaCollector:
         if existing:
             return existing
         
-        # Parse battle time
-        battle_time_str = battle.get('battleTime', '')
-        try:
-            battle_time = datetime.strptime(battle_time_str, '%Y%m%dT%H%M%S.%fZ')
-        except:
-            battle_time = datetime.now()
-        
         battle_type = battle.get('type', '')
         game_mode = battle.get('gameMode', {}).get('name', '')
         arena_name = battle.get('arena', {}).get('name', '')
@@ -476,7 +457,6 @@ class MetaCollector:
         # Create battle record
         battle_record = Battle(
             battle_id=battle_id,
-            battle_time=battle_time,
             battle_type=battle_type,
             game_mode=game_mode,
             arena_name=arena_name,

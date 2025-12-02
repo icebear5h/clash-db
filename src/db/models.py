@@ -17,7 +17,6 @@ class Location(Base):
     is_country = Column(Boolean, default=False)
     country_code = Column(String(10))
     
-    players = relationship("Player", back_populates="location")
     leaderboards = relationship("Leaderboard", back_populates="location")
 
     def __repr__(self):
@@ -28,21 +27,14 @@ class Player(Base):
     __tablename__ = 'players'
     
     player_tag = Column(String(20), primary_key=True)
-    name = Column(String(50))
-    exp_level = Column(Integer)
-    current_trophies = Column(Integer)
-    best_trophies = Column(Integer)
-    location_id = Column(Integer, ForeignKey('locations.location_id', ondelete='SET NULL'))
-    last_seen = Column(DateTime)
     
-    location = relationship("Location", back_populates="players")
     leaderboard_entries = relationship("LeaderboardSnapshotPlayer", back_populates="player")
     tournament_entries = relationship("TournamentMember", back_populates="player")
     decks = relationship("PlayerDeck", back_populates="player")
     battle_entries = relationship("BattlePlayer", back_populates="player")
 
     def __repr__(self):
-        return f"<Player {self.name} ({self.player_tag})>"
+        return f"<Player {self.player_tag}>"
 
 
 class Card(Base):
@@ -241,12 +233,10 @@ class Battle(Base):
     __tablename__ = 'battles'
     
     battle_id = Column(String(64), primary_key=True)
-    battle_time = Column(DateTime, nullable=False)
     battle_type = Column(String(30))
     game_mode = Column(String(50))
     arena_name = Column(String(50))
     is_ladder = Column(Boolean, default=False)
-    collected_at = Column(DateTime, server_default=func.now())
     
     players = relationship("BattlePlayer", back_populates="battle", cascade="all, delete-orphan")
 

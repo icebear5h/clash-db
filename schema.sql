@@ -17,16 +17,9 @@ CREATE TABLE locations (
     country_code VARCHAR(10)
 );
 
--- Players (minimal info for rankings)
+-- Players (just tags for foreign key references)
 CREATE TABLE players (
-    player_tag VARCHAR(20) PRIMARY KEY,
-    name VARCHAR(50),
-    exp_level INT,
-    current_trophies INT,
-    best_trophies INT,
-    location_id INT,
-    last_seen TIMESTAMP,
-    FOREIGN KEY (location_id) REFERENCES locations(location_id) ON DELETE SET NULL
+    player_tag VARCHAR(20) PRIMARY KEY
 );
 
 -- All cards in the game
@@ -179,12 +172,10 @@ CREATE TABLE tournament_members (
 -- Individual battles from player battlelogs
 CREATE TABLE battles (
     battle_id VARCHAR(64) PRIMARY KEY,  -- Hash of battleTime + player tags
-    battle_time TIMESTAMP NOT NULL,
     battle_type VARCHAR(30),            -- PvP, tournament, challenge, etc.
     game_mode VARCHAR(50),
     arena_name VARCHAR(50),
-    is_ladder BOOLEAN DEFAULT FALSE,
-    collected_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    is_ladder BOOLEAN DEFAULT FALSE
 );
 
 -- Players in each battle (2 per battle)
@@ -214,8 +205,6 @@ CREATE INDEX idx_card_stats_pickrate ON card_snapshot_stats(snapshot_id, pick_ra
 CREATE INDEX idx_snapshots_type ON meta_snapshots(snapshot_type, taken_at DESC);
 CREATE INDEX idx_leaderboard_snapshots ON leaderboard_snapshots(leaderboard_id, taken_at DESC);
 CREATE INDEX idx_tournament_status ON tournaments(status, created_time DESC);
-CREATE INDEX idx_players_trophies ON players(current_trophies DESC);
-CREATE INDEX idx_battles_time ON battles(battle_time DESC);
 CREATE INDEX idx_battles_type ON battles(battle_type, is_ladder);
 CREATE INDEX idx_battle_players_player ON battle_players(player_tag);
 CREATE INDEX idx_battle_players_deck ON battle_players(deck_id);
