@@ -283,7 +283,7 @@ FROM battles;
 -- 14. CARD COUNTER ANALYSIS
 -- Which cards beat which? (When card X is in winner deck, what's in loser deck?)
 -- ============================================================================
-SELECT 
+SELECT
     c_winner.name AS winning_card,
     c_loser.name AS losing_to,
     COUNT(*) AS times,
@@ -299,3 +299,65 @@ WHERE c_winner.name IN ('Hog Rider', 'Golem', 'X-Bow', 'Royal Giant', 'Lava Houn
 GROUP BY c_winner.id, c_winner.name, c_loser.id, c_loser.name
 HAVING COUNT(*) >= 20
 ORDER BY c_winner.name, times DESC;
+
+-- ============================================================================
+-- 15. ADVANCED 3-CARD SYNERGY META (Enhanced Combination Analysis)
+-- Identifies 3-card combinations with synergy scores and role balance
+-- Shows whether cards perform better together than individually
+-- ============================================================================
+WITH card_stats AS (
+    -- Get baseline win rate for each card
+    SELECT
+        c.id,
+        c.name,
+        c.rarity,
+        c.elixir,
+        COUNT(*) AS total_uses,
+        ROUND(SUM(CASE WHEN b.is_winner = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS individual_win_rate
+    FROM battles b,
+        JSON_TABLE(b.player_cards, '$[*]' COLUMNS (card_id INT PATH '$.id')) AS pc
+    JOIN cards c ON c.id = pc.card_id
+    GROUP BY c.id, c.name, c.rarity, c.elixir
+),
+triple_combos AS (
+    -- Find all 3-card combinations
+    SELECT
+        c1.id AS card1_id, c1.name AS card1,
+        c2.id AS card2_id, c2.name AS card2,
+        c3.id AS card3_id, c3.name AS card3,
+        ROUND((c1.elixir + c2.elixir + c3.elixir) / 3.0, 2) AS avg_elixir,
+        COUNT(*) AS combo_uses,
+        ROUND(SUM(CASE WHEN b.is_winner = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS combo_win_rate
+    FROM battles b,
+        JSON_TABLE(b.player_cards, '$[*]' COLUMNS (card_id INT PATH '$.id')) AS pc1,
+        JSON_TABLE(b.player_cards, '$[*]' COLUMNS (card_id INT PATH '$.id')) AS pc2,
+        JSON_TABLE(b.player_cards, '$[*]' COLUMNS (card_id INT PATH '$.id')) AS pc3
+    JOIN cards c1 ON c1.id = pc1.card_id
+    JOIN cards c2 ON c2.id = pc2.card_id
+    JOIN cards c3 ON c3.id = pc3.card_id
+    WHERE pc1.card_id < pc2.card_id AND pc2.card_id < pc3.card_id
+    GROUP BY c1.id, c1.name, c2.id, c2.name, c3.id, c3.name, c1.elixir, c2.elixir, c3.elixir
+    HAVING COUNT(*) >= 25
+)
+SELECT
+    CONCAT(tc.card1, ' + ', tc.card2, ' + ', tc.card3) AS card_combo,
+    tc.combo_uses AS times_used,
+    tc.avg_elixir AS avg_cost,
+    tc.combo_win_rate AS actual_win_rate,
+    ROUND((cs1.individual_win_rate + cs2.individual_win_rate + cs3.individual_win_rate) / 3, 2) AS expected_win_rate,
+    ROUND(tc.combo_win_rate - ((cs1.individual_win_rate + cs2.individual_win_rate + cs3.individual_win_rate) / 3), 2) AS synergy_score,
+    CASE
+        WHEN tc.combo_win_rate - ((cs1.individual_win_rate + cs2.individual_win_rate + cs3.individual_win_rate) / 3) > 5
+        THEN 'Strong Synergy'
+        WHEN tc.combo_win_rate - ((cs1.individual_win_rate + cs2.individual_win_rate + cs3.individual_win_rate) / 3) > 2
+        THEN 'Good Synergy'
+        WHEN tc.combo_win_rate - ((cs1.individual_win_rate + cs2.individual_win_rate + cs3.individual_win_rate) / 3) < -2
+        THEN 'Anti-Synergy'
+        ELSE 'Neutral'
+    END AS synergy_rating
+FROM triple_combos tc
+JOIN card_stats cs1 ON cs1.id = tc.card1_id
+JOIN card_stats cs2 ON cs2.id = tc.card2_id
+JOIN card_stats cs3 ON cs3.id = tc.card3_id
+ORDER BY synergy_score DESC, combo_uses DESC
+LIMIT 30;

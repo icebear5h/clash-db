@@ -226,8 +226,8 @@ INTERPRETATION GUIDE:
 ANALYSIS:
 """)
     if win_rates[0][1] > 55:
-        report.append(f"  ⚠️  {card_map[win_rates[0][0]]['name']} has an unusually high win rate of {win_rates[0][1]:.1f}%.")
-        report.append(f"      This card may be overpowered in the current meta.")
+        report.append(f"  WARNING: {card_map[win_rates[0][0]]['name']} has an unusually high win rate of {win_rates[0][1]:.1f}%.")
+        report.append(f"          This card may be overpowered in the current meta.")
     
     # Section 3: Card Synergies
     report.append("\n")
@@ -362,7 +362,7 @@ DECK BUILDING RECOMMENDATIONS:
         f.write(report_text)
     
     print(report_text)
-    print(f"\n✅ Report saved to META_REPORT.txt")
+    print(f"\nReport saved to META_REPORT.txt")
 
 if __name__ == '__main__':
     generate_report()

@@ -11,9 +11,28 @@ deck_cards = Table(
     Column('card_id', Integer, ForeignKey('cards.id'), primary_key=True)
 )
 
+class Clan(Base):
+    __tablename__ = 'clans'
+
+    tag = Column(String(20), primary_key=True)
+    name = Column(String(100), nullable=False)
+    type = Column(String(20))  # open, inviteOnly, closed
+    description = Column(String(500))
+    badge_id = Column(Integer)
+    clan_score = Column(Integer)
+    clan_war_trophies = Column(Integer)
+    required_trophies = Column(Integer)
+    donations_per_week = Column(Integer)
+    members_count = Column(Integer)
+    location = Column(String(100))
+    last_updated = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+    # Relationships
+    players = relationship("Player", back_populates="clan")
+
 class Player(Base):
     __tablename__ = 'players'
-    
+
     tag = Column(String(20), primary_key=True)
     name = Column(String(50), nullable=False)
     exp_level = Column(Integer)
@@ -25,7 +44,8 @@ class Player(Base):
     three_crown_wins = Column(Integer)
     challenge_cards_won = Column(Integer)
     tournament_cards_won = Column(Integer)
-    role = Column(String(20))
+    clan_tag = Column(String(20), ForeignKey('clans.tag'))  # Foreign key to clans
+    role = Column(String(20))  # member, elder, coLeader, leader
     donations = Column(Integer)
     donations_received = Column(Integer)
     total_donations = Column(Integer)
@@ -34,6 +54,7 @@ class Player(Base):
     last_updated = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     # Relationships
+    clan = relationship("Clan", back_populates="players")
     battles = relationship("Battle", foreign_keys="Battle.player_tag", back_populates="player")
     
 class Card(Base):
