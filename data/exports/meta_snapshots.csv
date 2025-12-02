@@ -1,2 +1,5 @@
 snapshot_id,taken_at,snapshot_type,trophy_min,trophy_max,sample_size,total_decks,description
 1,2025-12-02 16:58:59,ladder,,,1650,909,Collection from 100 players
+2,2025-12-02 17:16:03,ladder_10k_plus,10000,,802,446,"Trophy range 10,000+"
+3,2025-12-02 17:16:04,ladder_7k_10k,7000,10000,385,227,"Trophy range 7,000 - 10,000"
+4,2025-12-02 17:16:04,ladder_1k_7k,1000,7000,463,261,"Trophy range 1,000 - 7,000"
