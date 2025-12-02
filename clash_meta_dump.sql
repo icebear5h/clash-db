@@ -1,10 +1,10 @@
 -- Clash Royale Meta Database Dump
--- Generated: Tue Dec  2 18:03:26 EST 2025
+-- Generated: 2025-12-02 18:37:53
 -- Schema + Data
 
 SET FOREIGN_KEY_CHECKS=0;
 
--- Table: battle_players
+-- Table: battle_players (6446 rows)
 DELETE FROM battle_players;
 INSERT INTO battle_players (battle_id, team_side, player_tag, deck_id, starting_trophies, trophy_change, crowns, is_winner) VALUES
 ('000cfb6c2bf36c5ece07bb97b9c2d56d', 0, '#2P2Q99G9C', 2293, 7, NULL, 0, 0),
@@ -6454,7 +6454,7 @@ INSERT INTO battle_players (battle_id, team_side, player_tag, deck_id, starting_
 ('ffe500b7a740ce9b2f56069115da626e', 0, '#902PCG9V2', 1587, 12, 1, 1, 1),
 ('ffe500b7a740ce9b2f56069115da626e', 1, '#QGCQLPV2V', 1588, 7, NULL, 0, 0);
 
--- Table: battles
+-- Table: battles (3223 rows)
 DELETE FROM battles;
 INSERT INTO battles (battle_id, battle_time, battle_type, game_mode, arena_name, is_ladder, collected_at) VALUES
 ('000cfb6c2bf36c5ece07bb97b9c2d56d', '2025-11-30 23:00:49', 'tournament', 'TripleElixir_Tournament', 'Frozen Peak', 0, '2025-12-02 16:58:21'),
@@ -9681,7 +9681,7 @@ INSERT INTO battles (battle_id, battle_time, battle_type, game_mode, arena_name,
 ('ffe29eaac12a607cb9f66f2b05e2258d', '2025-12-02 20:01:32', 'PvP', 'Ladder', 'Lumberlove Cabin', 1, '2025-12-02 16:58:06'),
 ('ffe500b7a740ce9b2f56069115da626e', '2025-12-01 21:58:49', 'tournament', 'DraftModeInsane', 'Legendary Arena', 0, '2025-12-02 16:57:35');
 
--- Table: card_snapshot_stats
+-- Table: card_snapshot_stats (465 rows)
 DELETE FROM card_snapshot_stats;
 INSERT INTO card_snapshot_stats (snapshot_id, card_id, games_played, games_won, win_rate, pick_rate) VALUES
 (1, 26000000, 389, 211, '54.24', '23.58'),
@@ -10150,7 +10150,7 @@ INSERT INTO card_snapshot_stats (snapshot_id, card_id, games_played, games_won, 
 (4, 28000025, 1, 0, '0.00', '0.22'),
 (4, 28000026, 9, 3, '33.33', '1.94');
 
--- Table: cards
+-- Table: cards (121 rows)
 DELETE FROM cards;
 INSERT INTO cards (card_id, name, rarity, elixir_cost, card_type, icon_url) VALUES
 (26000000, 'Knight', 'common', 3, 'troop', 'https://api-assets.clashroyale.com/cards/300/jAj1Q5rclXxU9kVImGqSJxa4wEMfEhvwNQ_4jiGUuqg.png'),
@@ -10275,7 +10275,7 @@ INSERT INTO cards (card_id, name, rarity, elixir_cost, card_type, icon_url) VALU
 (28000025, 'Spirit Empress', 'legendary', 6, 'spell', 'https://api-assets.clashroyale.com/cards/300/MWWBZqiQeRBXSqEITVMj46nO_uCIUsqBidvUw9K2twY.png'),
 (28000026, 'Vines', 'epic', 3, 'spell', 'https://api-assets.clashroyale.com/cards/300/V5sJlPuo2WBRtirJ1lGEPJA4NvQ0KPwFeMrpxLX5z_8.png');
 
--- Table: deck_cards
+-- Table: deck_cards (34536 rows)
 DELETE FROM deck_cards;
 INSERT INTO deck_cards (deck_id, card_id) VALUES
 (37, 26000000),
@@ -44815,7 +44815,7 @@ INSERT INTO deck_cards (deck_id, card_id) VALUES
 (4314, 28000026),
 (4317, 28000026);
 
--- Table: deck_snapshot_stats
+-- Table: deck_snapshot_stats (1843 rows)
 DELETE FROM deck_snapshot_stats;
 INSERT INTO deck_snapshot_stats (snapshot_id, deck_id, games_played, games_won, win_rate, pick_rate) VALUES
 (1, 3, 3, 3, '100.00', '0.18'),
@@ -46662,7 +46662,7 @@ INSERT INTO deck_snapshot_stats (snapshot_id, deck_id, games_played, games_won, 
 (4, 4281, 1, 1, '100.00', '0.22'),
 (4, 4282, 1, 1, '100.00', '0.22');
 
--- Table: decks
+-- Table: decks (4317 rows)
 DELETE FROM decks;
 INSERT INTO decks (deck_id, deck_hash, avg_elixir, created_at) VALUES
 (1, '38f16c90c0e9893c0bad6b35e875f6c8aa507b942f203141d24a3c2bb4e49d34', '3.3', '2025-12-02 16:54:42'),
@@ -50983,15 +50983,15 @@ INSERT INTO decks (deck_id, deck_hash, avg_elixir, created_at) VALUES
 (4316, '30c611f83af73f73c00d93d029a76e827b33d387962dc67686695bb548fc2d44', '4.4', '2025-12-02 16:58:28'),
 (4317, 'e1e44eb7e44bf4f34563cdd3459f62da50dff5cf86d0b5d87b48f41b3e2488f9', '3.4', '2025-12-02 16:58:28');
 
--- Table: leaderboard_snapshot_players
+-- Table: leaderboard_snapshot_players (0 rows)
 DELETE FROM leaderboard_snapshot_players;
 -- No data
 
--- Table: leaderboard_snapshots
+-- Table: leaderboard_snapshots (0 rows)
 DELETE FROM leaderboard_snapshots;
 -- No data
 
--- Table: leaderboards
+-- Table: leaderboards (6 rows)
 DELETE FROM leaderboards;
 INSERT INTO leaderboards (leaderboard_id, name, leaderboard_type, location_id) VALUES
 ('57000056', 'China', 'location', 57000056),
@@ -51001,7 +51001,7 @@ INSERT INTO leaderboards (leaderboard_id, name, leaderboard_type, location_id) V
 ('57000249', 'United States', 'location', 57000249),
 ('global', 'Global', 'global', NULL);
 
--- Table: locations
+-- Table: locations (262 rows)
 DELETE FROM locations;
 INSERT INTO locations (location_id, name, is_country, country_code) VALUES
 (57000000, 'Europe', 0, NULL),
@@ -51267,7 +51267,7 @@ INSERT INTO locations (location_id, name, is_country, country_code) VALUES
 (57000260, 'Zimbabwe', 1, 'ZW'),
 (57000261, 'Unknown', 0, NULL);
 
--- Table: meta_snapshots
+-- Table: meta_snapshots (4 rows)
 DELETE FROM meta_snapshots;
 INSERT INTO meta_snapshots (snapshot_id, taken_at, snapshot_type, trophy_min, trophy_max, sample_size, total_decks, description) VALUES
 (1, '2025-12-02 16:58:59', 'ladder', NULL, NULL, 1650, 909, 'Collection from 100 players'),
@@ -51275,7 +51275,7 @@ INSERT INTO meta_snapshots (snapshot_id, taken_at, snapshot_type, trophy_min, tr
 (3, '2025-12-02 17:16:04', 'ladder_7k_10k', 7000, 10000, 385, 227, 'Trophy range 7,000 - 10,000'),
 (4, '2025-12-02 17:16:04', 'ladder_1k_7k', 1000, 7000, 463, 261, 'Trophy range 1,000 - 7,000');
 
--- Table: player_decks
+-- Table: player_decks (630 rows)
 DELETE FROM player_decks;
 INSERT INTO player_decks (player_tag, deck_id, is_current, recorded_at) VALUES
 ('#2022LR8LC0', 559, 1, '2025-12-02 16:57:09'),
@@ -51909,7 +51909,7 @@ INSERT INTO player_decks (player_tag, deck_id, is_current, recorded_at) VALUES
 ('#YRVPP2CLG', 162, 1, '2025-12-02 16:55:25'),
 ('#YY99VU9QG', 370, 1, '2025-12-02 16:56:19');
 
--- Table: players
+-- Table: players (2819 rows)
 DELETE FROM players;
 INSERT INTO players (player_tag, name, exp_level, current_trophies, best_trophies, location_id, last_seen) VALUES
 ('#2000P0LPY8', 'abdouu', NULL, NULL, NULL, NULL, '2025-12-02 16:57:54'),
@@ -54732,7 +54732,7 @@ INSERT INTO players (player_tag, name, exp_level, current_trophies, best_trophie
 ('#YYVQ0U82Q', 'Aaron:)', NULL, NULL, NULL, NULL, '2025-12-02 16:57:24'),
 ('#YYVVU2Q8V', 'ダーマン', NULL, NULL, NULL, NULL, '2025-12-02 16:58:17');
 
--- Table: tournament_members
+-- Table: tournament_members (630 rows)
 DELETE FROM tournament_members;
 INSERT INTO tournament_members (tournament_tag, player_tag, rank_position, score) VALUES
 ('#2CYYPLVG', '#2029L09G', 101, 2),
@@ -55366,7 +55366,7 @@ INSERT INTO tournament_members (tournament_tag, player_tag, rank_position, score
 ('#829PUVGY', '#CQJL98G90', 1, 1),
 ('#829Y0QC9', '#VL0C20Q0L', 1, 0);
 
--- Table: tournaments
+-- Table: tournaments (38 rows)
 DELETE FROM tournaments;
 INSERT INTO tournaments (tournament_tag, name, description, status, tournament_type, capacity, max_capacity, level_cap, game_mode_name, created_time, started_time, first_place_prize, collected_at) VALUES
 ('#2CYYPLVG', 'a adam 60th', NULL, 'inProgress', 'open', 169, 500, 11, NULL, '2025-12-02 19:39:06', '2025-12-02 19:39:08', 0, '2025-12-02 16:54:33'),

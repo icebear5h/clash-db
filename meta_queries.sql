@@ -81,16 +81,17 @@ GROUP BY c.card_id, c.name, c.elixir_cost
 ORDER BY used DESC;
 
 -- 8. TOP DECKS
-SELECT d.deck_id, d.avg_elixir, GROUP_CONCAT(c.name ORDER BY c.elixir_cost DESC SEPARATOR ', ') AS cards,
-       COUNT(*)/8 AS games, ROUND(SUM(bp.is_winner)*100.0/COUNT(*),2) AS win_rate
+SELECT d.avg_elixir, 
+       (SELECT GROUP_CONCAT(c2.name ORDER BY c2.elixir_cost DESC SEPARATOR ', ')
+        FROM deck_cards dc2 JOIN cards c2 ON dc2.card_id = c2.card_id
+        WHERE dc2.deck_id = d.deck_id) AS cards,
+       COUNT(*) AS games, ROUND(SUM(bp.is_winner)*100.0/COUNT(*),2) AS win_rate
 FROM battle_players bp
 JOIN decks d ON bp.deck_id = d.deck_id
-JOIN deck_cards dc ON d.deck_id = dc.deck_id
-JOIN cards c ON dc.card_id = c.card_id
 WHERE bp.deck_id IS NOT NULL
 GROUP BY d.deck_id, d.avg_elixir
-HAVING COUNT(*)/8 >= 3
-ORDER BY win_rate DESC LIMIT 15;
+HAVING COUNT(*) >= 3
+ORDER BY win_rate DESC, games DESC LIMIT 15;
 
 -- 9. TOURNAMENT META - Most used cards by tournament players
 SELECT c.name, c.rarity, c.elixir_cost, COUNT(*) AS times_used,
@@ -104,15 +105,16 @@ GROUP BY c.card_id, c.name, c.rarity, c.elixir_cost
 ORDER BY times_used DESC LIMIT 20;
 
 -- 10. TOURNAMENT TOP DECKS
-SELECT d.avg_elixir, GROUP_CONCAT(c.name ORDER BY c.elixir_cost DESC SEPARATOR ', ') AS cards,
-       COUNT(*)/8 AS players
+SELECT d.avg_elixir, 
+       (SELECT GROUP_CONCAT(c2.name ORDER BY c2.elixir_cost DESC SEPARATOR ', ')
+        FROM deck_cards dc2 JOIN cards c2 ON dc2.card_id = c2.card_id
+        WHERE dc2.deck_id = d.deck_id) AS cards,
+       COUNT(*) AS players
 FROM tournament_members tm
 JOIN player_decks pd ON tm.player_tag = pd.player_tag
 JOIN decks d ON pd.deck_id = d.deck_id
-JOIN deck_cards dc ON d.deck_id = dc.deck_id
-JOIN cards c ON dc.card_id = c.card_id
 GROUP BY d.deck_id, d.avg_elixir
-HAVING COUNT(*)/8 >= 2
+HAVING COUNT(*) >= 2
 ORDER BY players DESC LIMIT 15;
 
 -- 11. TOP LADDER META (10k+ trophies from battles)
@@ -127,16 +129,17 @@ GROUP BY c.card_id, c.name, c.rarity, c.elixir_cost
 ORDER BY times_used DESC LIMIT 20;
 
 -- 12. TOP LADDER DECKS (10k+ trophies)
-SELECT d.avg_elixir, GROUP_CONCAT(c.name ORDER BY c.elixir_cost DESC SEPARATOR ', ') AS cards,
-       COUNT(*)/8 AS games, ROUND(SUM(bp.is_winner)*100.0/COUNT(*),2) AS win_rate
+SELECT d.avg_elixir, 
+       (SELECT GROUP_CONCAT(c2.name ORDER BY c2.elixir_cost DESC SEPARATOR ', ')
+        FROM deck_cards dc2 JOIN cards c2 ON dc2.card_id = c2.card_id
+        WHERE dc2.deck_id = d.deck_id) AS cards,
+       COUNT(*) AS games, ROUND(SUM(bp.is_winner)*100.0/COUNT(*),2) AS win_rate
 FROM battle_players bp
 JOIN decks d ON bp.deck_id = d.deck_id
-JOIN deck_cards dc ON d.deck_id = dc.deck_id
-JOIN cards c ON dc.card_id = c.card_id
 WHERE bp.starting_trophies >= 10000 AND bp.deck_id IS NOT NULL
 GROUP BY d.deck_id, d.avg_elixir
-HAVING COUNT(*)/8 >= 3
-ORDER BY win_rate DESC LIMIT 15;
+HAVING COUNT(*) >= 3
+ORDER BY win_rate DESC, games DESC LIMIT 15;
 
 -- 13. SUMMARY
 SELECT 'BATTLES' AS metric, COUNT(*) AS value FROM battles
