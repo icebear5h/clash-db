@@ -1,0 +1,263 @@
+location_id,name,is_country,country_code
+57000000,Europe,0,
+57000001,North America,0,
+57000002,South America,0,
+57000003,Asia,0,
+57000004,Oceania,0,
+57000005,Africa,0,
+57000006,International,0,
+57000007,Afghanistan,1,AF
+57000008,Åland Islands,1,AX
+57000009,Albania,1,AL
+57000010,Algeria,1,DZ
+57000011,American Samoa,1,AS
+57000012,Andorra,1,AD
+57000013,Angola,1,AO
+57000014,Anguilla,1,AI
+57000015,Antarctica,1,AQ
+57000016,Antigua and Barbuda,1,AG
+57000017,Argentina,1,AR
+57000018,Armenia,1,AM
+57000019,Aruba,1,AW
+57000020,Ascension Island,1,AC
+57000021,Australia,1,AU
+57000022,Austria,1,AT
+57000023,Azerbaijan,1,AZ
+57000024,Bahamas,1,BS
+57000025,Bahrain,1,BH
+57000026,Bangladesh,1,BD
+57000027,Barbados,1,BB
+57000028,Belarus,1,BY
+57000029,Belgium,1,BE
+57000030,Belize,1,BZ
+57000031,Benin,1,BJ
+57000032,Bermuda,1,BM
+57000033,Bhutan,1,BT
+57000034,Bolivia,1,BO
+57000035,Bosnia and Herzegovina,1,BA
+57000036,Botswana,1,BW
+57000037,Bouvet Island,1,BV
+57000038,Brazil,1,BR
+57000039,British Indian Ocean Territory,1,IO
+57000040,British Virgin Islands,1,VG
+57000041,Brunei,1,BN
+57000042,Bulgaria,1,BG
+57000043,Burkina Faso,1,BF
+57000044,Burundi,1,BI
+57000045,Cambodia,1,KH
+57000046,Cameroon,1,CM
+57000047,Canada,1,CA
+57000048,Canary Islands,1,IC
+57000049,Cape Verde,1,CV
+57000050,Caribbean Netherlands,1,BQ
+57000051,Cayman Islands,1,KY
+57000052,Central African Republic,1,CF
+57000053,Ceuta and Melilla,1,EA
+57000054,Chad,1,TD
+57000055,Chile,1,CL
+57000056,China,1,CN
+57000057,Christmas Island,1,CX
+57000058,Cocos (Keeling) Islands,1,CC
+57000059,Colombia,1,CO
+57000060,Comoros,1,KM
+57000061,Congo (DRC),1,CG
+57000062,Congo (Republic),1,CD
+57000063,Cook Islands,1,CK
+57000064,Costa Rica,1,CR
+57000065,Côte d’Ivoire,1,CI
+57000066,Croatia,1,HR
+57000067,Cuba,1,CU
+57000068,Curaçao,1,CW
+57000069,Cyprus,1,CY
+57000070,Czech Republic,1,CZ
+57000071,Denmark,1,DK
+57000072,Diego Garcia,1,DG
+57000073,Djibouti,1,DJ
+57000074,Dominica,1,DM
+57000075,Dominican Republic,1,DO
+57000076,Ecuador,1,EC
+57000077,Egypt,1,EG
+57000078,El Salvador,1,SV
+57000079,Equatorial Guinea,1,GQ
+57000080,Eritrea,1,ER
+57000081,Estonia,1,EE
+57000082,Ethiopia,1,ET
+57000083,Falkland Islands,1,FK
+57000084,Faroe Islands,1,FO
+57000085,Fiji,1,FJ
+57000086,Finland,1,FI
+57000087,France,1,FR
+57000088,French Guiana,1,GF
+57000089,French Polynesia,1,PF
+57000090,French Southern Territories,1,TF
+57000091,Gabon,1,GA
+57000092,Gambia,1,GM
+57000093,Georgia,1,GE
+57000094,Germany,1,DE
+57000095,Ghana,1,GH
+57000096,Gibraltar,1,GI
+57000097,Greece,1,GR
+57000098,Greenland,1,GL
+57000099,Grenada,1,GD
+57000100,Guadeloupe,1,GP
+57000101,Guam,1,GU
+57000102,Guatemala,1,GT
+57000103,Guernsey,1,GG
+57000104,Guinea,1,GN
+57000105,Guinea-Bissau,1,GW
+57000106,Guyana,1,GY
+57000107,Haiti,1,HT
+57000108,Heard & McDonald Islands,1,HM
+57000109,Honduras,1,HN
+57000110,Hong Kong,1,HK
+57000111,Hungary,1,HU
+57000112,Iceland,1,IS
+57000113,India,1,IN
+57000114,Indonesia,1,ID
+57000115,Iran,1,IR
+57000116,Iraq,1,IQ
+57000117,Ireland,1,IE
+57000118,Isle of Man,1,IM
+57000119,Israel,1,IL
+57000120,Italy,1,IT
+57000121,Jamaica,1,JM
+57000122,Japan,1,JP
+57000123,Jersey,1,JE
+57000124,Jordan,1,JO
+57000125,Kazakhstan,1,KZ
+57000126,Kenya,1,KE
+57000127,Kiribati,1,KI
+57000128,Kosovo,1,XK
+57000129,Kuwait,1,KW
+57000130,Kyrgyzstan,1,KG
+57000131,Laos,1,LA
+57000132,Latvia,1,LV
+57000133,Lebanon,1,LB
+57000134,Lesotho,1,LS
+57000135,Liberia,1,LR
+57000136,Libya,1,LY
+57000137,Liechtenstein,1,LI
+57000138,Lithuania,1,LT
+57000139,Luxembourg,1,LU
+57000140,Macau,1,MO
+57000141,Macedonia (FYROM),1,MK
+57000142,Madagascar,1,MG
+57000143,Malawi,1,MW
+57000144,Malaysia,1,MY
+57000145,Maldives,1,MV
+57000146,Mali,1,ML
+57000147,Malta,1,MT
+57000148,Marshall Islands,1,MH
+57000149,Martinique,1,MQ
+57000150,Mauritania,1,MR
+57000151,Mauritius,1,MU
+57000152,Mayotte,1,YT
+57000153,Mexico,1,MX
+57000154,Micronesia,1,FM
+57000155,Moldova,1,MD
+57000156,Monaco,1,MC
+57000157,Mongolia,1,MN
+57000158,Montenegro,1,ME
+57000159,Montserrat,1,MS
+57000160,Morocco,1,MA
+57000161,Mozambique,1,MZ
+57000162,Myanmar (Burma),1,MM
+57000163,Namibia,1,NA
+57000164,Nauru,1,NR
+57000165,Nepal,1,NP
+57000166,Netherlands,1,NL
+57000167,New Caledonia,1,NC
+57000168,New Zealand,1,NZ
+57000169,Nicaragua,1,NI
+57000170,Niger,1,NE
+57000171,Nigeria,1,NG
+57000172,Niue,1,NU
+57000173,Norfolk Island,1,NF
+57000174,North Korea,1,KP
+57000175,Northern Mariana Islands,1,MP
+57000176,Norway,1,NO
+57000177,Oman,1,OM
+57000178,Pakistan,1,PK
+57000179,Palau,1,PW
+57000180,Palestine,1,PS
+57000181,Panama,1,PA
+57000182,Papua New Guinea,1,PG
+57000183,Paraguay,1,PY
+57000184,Peru,1,PE
+57000185,Philippines,1,PH
+57000186,Pitcairn Islands,1,PN
+57000187,Poland,1,PL
+57000188,Portugal,1,PT
+57000189,Puerto Rico,1,PR
+57000190,Qatar,1,QA
+57000191,Réunion,1,RE
+57000192,Romania,1,RO
+57000193,Russia,1,RU
+57000194,Rwanda,1,RW
+57000195,Saint Barthélemy,1,BL
+57000196,Saint Helena,1,SH
+57000197,Saint Kitts and Nevis,1,KN
+57000198,Saint Lucia,1,LC
+57000199,Saint Martin,1,MF
+57000200,Saint Pierre and Miquelon,1,PM
+57000201,Samoa,1,WS
+57000202,San Marino,1,SM
+57000203,São Tomé and Príncipe,1,ST
+57000204,Saudi Arabia,1,SA
+57000205,Senegal,1,SN
+57000206,Serbia,1,RS
+57000207,Seychelles,1,SC
+57000208,Sierra Leone,1,SL
+57000209,Singapore,1,SG
+57000210,Sint Maarten,1,SX
+57000211,Slovakia,1,SK
+57000212,Slovenia,1,SI
+57000213,Solomon Islands,1,SB
+57000214,Somalia,1,SO
+57000215,South Africa,1,ZA
+57000216,South Korea,1,KR
+57000217,South Sudan,1,SS
+57000218,Spain,1,ES
+57000219,Sri Lanka,1,LK
+57000220,St. Vincent & Grenadines,1,VC
+57000221,Sudan,1,SD
+57000222,Suriname,1,SR
+57000223,Svalbard and Jan Mayen,1,SJ
+57000224,Swaziland,1,SZ
+57000225,Sweden,1,SE
+57000226,Switzerland,1,CH
+57000227,Syria,1,SY
+57000228,Taiwan,1,TW
+57000229,Tajikistan,1,TJ
+57000230,Tanzania,1,TZ
+57000231,Thailand,1,TH
+57000232,Timor-Leste,1,TL
+57000233,Togo,1,TG
+57000234,Tokelau,1,TK
+57000235,Tonga,1,TO
+57000236,Trinidad and Tobago,1,TT
+57000237,Tristan da Cunha,1,TA
+57000238,Tunisia,1,TN
+57000239,Turkey,1,TR
+57000240,Turkmenistan,1,TM
+57000241,Turks and Caicos Islands,1,TC
+57000242,Tuvalu,1,TV
+57000243,U.S. Outlying Islands,1,UM
+57000244,U.S. Virgin Islands,1,VI
+57000245,Uganda,1,UG
+57000246,Ukraine,1,UA
+57000247,United Arab Emirates,1,AE
+57000248,United Kingdom,1,GB
+57000249,United States,1,US
+57000250,Uruguay,1,UY
+57000251,Uzbekistan,1,UZ
+57000252,Vanuatu,1,VU
+57000253,Vatican City,1,VA
+57000254,Venezuela,1,VE
+57000255,Vietnam,1,VN
+57000256,Wallis and Futuna,1,WF
+57000257,Western Sahara,1,EH
+57000258,Yemen,1,YE
+57000259,Zambia,1,ZM
+57000260,Zimbabwe,1,ZW
+57000261,Unknown,0,

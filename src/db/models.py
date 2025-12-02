@@ -1,125 +1,271 @@
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Table, JSON, Boolean
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, DECIMAL, Boolean
+from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy.sql import func
-from .config import Base
 
-# Association table for many-to-many relationship between decks and cards
-deck_cards = Table(
-    'deck_cards',
-    Base.metadata,
-    Column('deck_id', Integer, ForeignKey('decks.id'), primary_key=True),
-    Column('card_id', Integer, ForeignKey('cards.id'), primary_key=True)
-)
+Base = declarative_base()
 
-class Clan(Base):
-    __tablename__ = 'clans'
 
-    tag = Column(String(20), primary_key=True)
+# ============================================
+# REFERENCE TABLES
+# ============================================
+
+class Location(Base):
+    __tablename__ = 'locations'
+    
+    location_id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
-    type = Column(String(20))  # open, inviteOnly, closed
-    description = Column(String(500))
-    badge_id = Column(Integer)
-    clan_score = Column(Integer)
-    clan_war_trophies = Column(Integer)
-    required_trophies = Column(Integer)
-    donations_per_week = Column(Integer)
-    members_count = Column(Integer)
-    location = Column(String(100))
-    last_updated = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    is_country = Column(Boolean, default=False)
+    country_code = Column(String(10))
+    
+    players = relationship("Player", back_populates="location")
+    leaderboards = relationship("Leaderboard", back_populates="location")
 
-    # Relationships
-    players = relationship("Player", back_populates="clan")
+    def __repr__(self):
+        return f"<Location {self.name} ({self.location_id})>"
+
 
 class Player(Base):
     __tablename__ = 'players'
-
-    tag = Column(String(20), primary_key=True)
-    name = Column(String(50), nullable=False)
-    exp_level = Column(Integer)
-    trophies = Column(Integer)
-    best_trophies = Column(Integer)
-    wins = Column(Integer)
-    losses = Column(Integer)
-    battle_count = Column(Integer)
-    three_crown_wins = Column(Integer)
-    challenge_cards_won = Column(Integer)
-    tournament_cards_won = Column(Integer)
-    clan_tag = Column(String(20), ForeignKey('clans.tag'))  # Foreign key to clans
-    role = Column(String(20))  # member, elder, coLeader, leader
-    donations = Column(Integer)
-    donations_received = Column(Integer)
-    total_donations = Column(Integer)
-    war_day_wins = Column(Integer)
-    clan_cards_collected = Column(Integer)
-    last_updated = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
-
-    # Relationships
-    clan = relationship("Clan", back_populates="players")
-    battles = relationship("Battle", foreign_keys="Battle.player_tag", back_populates="player")
     
+    player_tag = Column(String(20), primary_key=True)
+    name = Column(String(50))
+    exp_level = Column(Integer)
+    current_trophies = Column(Integer)
+    best_trophies = Column(Integer)
+    location_id = Column(Integer, ForeignKey('locations.location_id', ondelete='SET NULL'))
+    last_seen = Column(DateTime)
+    
+    location = relationship("Location", back_populates="players")
+    leaderboard_entries = relationship("LeaderboardSnapshotPlayer", back_populates="player")
+    tournament_entries = relationship("TournamentMember", back_populates="player")
+    decks = relationship("PlayerDeck", back_populates="player")
+    battle_entries = relationship("BattlePlayer", back_populates="player")
+
+    def __repr__(self):
+        return f"<Player {self.name} ({self.player_tag})>"
+
+
 class Card(Base):
     __tablename__ = 'cards'
     
-    id = Column(Integer, primary_key=True)
+    card_id = Column(Integer, primary_key=True)
     name = Column(String(50), unique=True, nullable=False)
     rarity = Column(String(20))
-    type = Column(String(20))  # troop, spell, building
-    elixir = Column(Integer)
-    arena = Column(Integer)
-    description = Column(String(500))
+    elixir_cost = Column(Integer)
+    card_type = Column(String(20))
+    icon_url = Column(String(255))
     
-    # Relationships
-    decks = relationship("Deck", secondary=deck_cards, back_populates="cards")
+    deck_cards = relationship("DeckCard", back_populates="card")
+    snapshot_stats = relationship("CardSnapshotStats", back_populates="card")
+
+    def __repr__(self):
+        return f"<Card {self.name} ({self.card_id})>"
+
 
 class Deck(Base):
     __tablename__ = 'decks'
     
-    id = Column(Integer, primary_key=True)
-    name = Column(String(100))
-    avg_elixir = Column(Float)
-    win_rate = Column(Float)
-    use_rate = Column(Float)
-    cards_count = Column(Integer)
-
-    # Relationships
-    cards = relationship("Card", secondary=deck_cards, back_populates="decks")
-    battles = relationship("Battle", foreign_keys="Battle.deck_id", back_populates="deck")
-
-class Battle(Base):
-    __tablename__ = 'battles'
+    deck_id = Column(Integer, primary_key=True, autoincrement=True)
+    deck_hash = Column(String(64), unique=True, nullable=False)
+    avg_elixir = Column(DECIMAL(3, 1))
+    created_at = Column(DateTime, server_default=func.now())
     
-    id = Column(Integer, primary_key=True)
-    battle_time = Column(DateTime, nullable=False)
-    battle_type = Column(String(50))
-    game_mode = Column(String(50))
-    arena_name = Column(String(50))
-    deck_type = Column(String(20))  # ladder, challenge, tournament, etc.
-    trophy_change = Column(Integer)
-    crown_difference = Column(Integer)
-    player_tag = Column(String(20), ForeignKey('players.tag'))
-    opponent_tag = Column(String(20), ForeignKey('players.tag'))
-    deck_id = Column(Integer, ForeignKey('decks.id'))
-    opponent_deck_id = Column(Integer, ForeignKey('decks.id'))
-    is_winner = Column(Boolean)
-    player_crowns = Column(Integer)
-    opponent_crowns = Column(Integer)
-    player_cards = Column(JSON)  # List of card levels used by player
-    opponent_cards = Column(JSON)  # List of card levels used by opponent
+    deck_cards = relationship("DeckCard", back_populates="deck", cascade="all, delete-orphan")
+    snapshot_stats = relationship("DeckSnapshotStats", back_populates="deck")
+
+    def __repr__(self):
+        return f"<Deck {self.deck_id} ({self.deck_hash[:8]}...)>"
+
+
+class DeckCard(Base):
+    __tablename__ = 'deck_cards'
     
-    # Relationships
-    player = relationship("Player", foreign_keys=[player_tag], back_populates="battles")
-    opponent = relationship("Player", foreign_keys=[opponent_tag])
-    deck = relationship("Deck", foreign_keys=[deck_id], back_populates="battles")
-    opponent_deck = relationship("Deck", foreign_keys=[opponent_deck_id])
+    deck_id = Column(Integer, ForeignKey('decks.deck_id', ondelete='CASCADE'), primary_key=True)
+    card_id = Column(Integer, ForeignKey('cards.card_id', ondelete='CASCADE'), primary_key=True)
+    
+    deck = relationship("Deck", back_populates="deck_cards")
+    card = relationship("Card", back_populates="deck_cards")
+
 
 class MetaSnapshot(Base):
     __tablename__ = 'meta_snapshots'
     
-    id = Column(Integer, primary_key=True)
-    snapshot_date = Column(DateTime, default=func.now())
-    trophy_range = Column(String(20))  # e.g., '0-3000', '3000-4000', etc.
-    game_mode = Column(String(50))
-    meta_data = Column(JSON)  # JSON containing meta statistics
+    snapshot_id = Column(Integer, primary_key=True, autoincrement=True)
+    taken_at = Column(DateTime, server_default=func.now())
+    snapshot_type = Column(String(30), nullable=False)
+    trophy_min = Column(Integer)
+    trophy_max = Column(Integer)
+    sample_size = Column(Integer, default=0)
+    total_decks = Column(Integer, default=0)
+    description = Column(String(200))
     
+    deck_stats = relationship("DeckSnapshotStats", back_populates="snapshot", cascade="all, delete-orphan")
+    card_stats = relationship("CardSnapshotStats", back_populates="snapshot", cascade="all, delete-orphan")
+
     def __repr__(self):
-        return f"<MetaSnapshot {self.snapshot_date} - {self.trophy_range} - {self.game_mode}>"
+        return f"<MetaSnapshot {self.snapshot_id} ({self.snapshot_type})>"
+
+
+class DeckSnapshotStats(Base):
+    __tablename__ = 'deck_snapshot_stats'
+    
+    snapshot_id = Column(Integer, ForeignKey('meta_snapshots.snapshot_id', ondelete='CASCADE'), primary_key=True)
+    deck_id = Column(Integer, ForeignKey('decks.deck_id', ondelete='CASCADE'), primary_key=True)
+    games_played = Column(Integer, default=0)
+    games_won = Column(Integer, default=0)
+    win_rate = Column(DECIMAL(5, 2))
+    pick_rate = Column(DECIMAL(5, 2))
+    
+    snapshot = relationship("MetaSnapshot", back_populates="deck_stats")
+    deck = relationship("Deck", back_populates="snapshot_stats")
+
+
+class CardSnapshotStats(Base):
+    __tablename__ = 'card_snapshot_stats'
+    
+    snapshot_id = Column(Integer, ForeignKey('meta_snapshots.snapshot_id', ondelete='CASCADE'), primary_key=True)
+    card_id = Column(Integer, ForeignKey('cards.card_id', ondelete='CASCADE'), primary_key=True)
+    games_played = Column(Integer, default=0)
+    games_won = Column(Integer, default=0)
+    win_rate = Column(DECIMAL(5, 2))
+    pick_rate = Column(DECIMAL(5, 2))
+    
+    snapshot = relationship("MetaSnapshot", back_populates="card_stats")
+    card = relationship("Card", back_populates="snapshot_stats")
+
+
+# ============================================
+# LEADERBOARDS / RANKINGS
+# ============================================
+
+class Leaderboard(Base):
+    __tablename__ = 'leaderboards'
+    
+    leaderboard_id = Column(String(50), primary_key=True)
+    name = Column(String(100), nullable=False)
+    leaderboard_type = Column(String(30), nullable=False)  # 'global', 'location', 'path_of_legend'
+    location_id = Column(Integer, ForeignKey('locations.location_id', ondelete='SET NULL'))
+    
+    location = relationship("Location", back_populates="leaderboards")
+    snapshots = relationship("LeaderboardSnapshot", back_populates="leaderboard", cascade="all, delete-orphan")
+
+    def __repr__(self):
+        return f"<Leaderboard {self.name} ({self.leaderboard_id})>"
+
+
+class LeaderboardSnapshot(Base):
+    __tablename__ = 'leaderboard_snapshots'
+    
+    snapshot_id = Column(Integer, primary_key=True, autoincrement=True)
+    leaderboard_id = Column(String(50), ForeignKey('leaderboards.leaderboard_id', ondelete='CASCADE'), nullable=False)
+    taken_at = Column(DateTime, server_default=func.now())
+    player_count = Column(Integer, default=0)
+    
+    leaderboard = relationship("Leaderboard", back_populates="snapshots")
+    players = relationship("LeaderboardSnapshotPlayer", back_populates="snapshot", cascade="all, delete-orphan")
+
+    def __repr__(self):
+        return f"<LeaderboardSnapshot {self.snapshot_id} ({self.leaderboard_id})>"
+
+
+class LeaderboardSnapshotPlayer(Base):
+    __tablename__ = 'leaderboard_snapshot_players'
+    
+    snapshot_id = Column(Integer, ForeignKey('leaderboard_snapshots.snapshot_id', ondelete='CASCADE'), primary_key=True)
+    rank_position = Column(Integer, primary_key=True)
+    player_tag = Column(String(20), ForeignKey('players.player_tag', ondelete='CASCADE'), nullable=False)
+    trophies = Column(Integer)
+    deck_id = Column(Integer, ForeignKey('decks.deck_id', ondelete='SET NULL'))
+    
+    snapshot = relationship("LeaderboardSnapshot", back_populates="players")
+    player = relationship("Player", back_populates="leaderboard_entries")
+    deck = relationship("Deck")
+
+
+class PlayerDeck(Base):
+    __tablename__ = 'player_decks'
+    
+    player_tag = Column(String(20), ForeignKey('players.player_tag', ondelete='CASCADE'), primary_key=True)
+    deck_id = Column(Integer, ForeignKey('decks.deck_id', ondelete='CASCADE'), primary_key=True)
+    is_current = Column(Boolean, default=True)
+    recorded_at = Column(DateTime, server_default=func.now())
+    
+    player = relationship("Player", back_populates="decks")
+    deck = relationship("Deck")
+
+
+# ============================================
+# TOURNAMENTS
+# ============================================
+
+class Tournament(Base):
+    __tablename__ = 'tournaments'
+    
+    tournament_tag = Column(String(20), primary_key=True)
+    name = Column(String(100), nullable=False)
+    description = Column(String(500))
+    status = Column(String(20))  # 'preparation', 'inProgress', 'ended'
+    tournament_type = Column(String(30))
+    capacity = Column(Integer)
+    max_capacity = Column(Integer)
+    level_cap = Column(Integer)
+    game_mode_name = Column(String(50))
+    created_time = Column(DateTime)
+    started_time = Column(DateTime)
+    first_place_prize = Column(Integer)
+    collected_at = Column(DateTime, server_default=func.now())
+    
+    members = relationship("TournamentMember", back_populates="tournament", cascade="all, delete-orphan")
+
+    def __repr__(self):
+        return f"<Tournament {self.name} ({self.tournament_tag})>"
+
+
+class TournamentMember(Base):
+    __tablename__ = 'tournament_members'
+    
+    tournament_tag = Column(String(20), ForeignKey('tournaments.tournament_tag', ondelete='CASCADE'), primary_key=True)
+    player_tag = Column(String(20), ForeignKey('players.player_tag', ondelete='CASCADE'), primary_key=True)
+    rank_position = Column(Integer)
+    score = Column(Integer)
+    
+    tournament = relationship("Tournament", back_populates="members")
+    player = relationship("Player", back_populates="tournament_entries")
+
+
+# ============================================
+# BATTLES
+# ============================================
+
+class Battle(Base):
+    __tablename__ = 'battles'
+    
+    battle_id = Column(String(64), primary_key=True)
+    battle_time = Column(DateTime, nullable=False)
+    battle_type = Column(String(30))
+    game_mode = Column(String(50))
+    arena_name = Column(String(50))
+    is_ladder = Column(Boolean, default=False)
+    collected_at = Column(DateTime, server_default=func.now())
+    
+    players = relationship("BattlePlayer", back_populates="battle", cascade="all, delete-orphan")
+
+    def __repr__(self):
+        return f"<Battle {self.battle_id[:8]}... ({self.battle_type})>"
+
+
+class BattlePlayer(Base):
+    __tablename__ = 'battle_players'
+    
+    battle_id = Column(String(64), ForeignKey('battles.battle_id', ondelete='CASCADE'), primary_key=True)
+    team_side = Column(Integer, primary_key=True)  # 0 = team, 1 = opponent
+    player_tag = Column(String(20), ForeignKey('players.player_tag', ondelete='CASCADE'), nullable=False)
+    deck_id = Column(Integer, ForeignKey('decks.deck_id', ondelete='SET NULL'))
+    starting_trophies = Column(Integer)
+    trophy_change = Column(Integer)
+    crowns = Column(Integer)
+    is_winner = Column(Boolean)
+    
+    battle = relationship("Battle", back_populates="players")
+    player = relationship("Player", back_populates="battle_entries")
+    deck = relationship("Deck")

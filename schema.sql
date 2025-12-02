@@ -1,184 +1,221 @@
--- MySQL dump 10.13  Distrib 8.0.39, for macos14 (arm64)
---
--- Host: localhost    Database: clash_royale
--- ------------------------------------------------------
--- Server version	8.0.39
+-- Clash Royale Meta Database Schema
+-- Tracks decks, meta snapshots, leaderboards, and tournaments
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+DROP DATABASE IF EXISTS clash_meta;
+CREATE DATABASE clash_meta;
+USE clash_meta;
 
---
--- Table structure for table `battles`
---
+-- ============================================
+-- REFERENCE TABLES
+-- ============================================
 
-DROP TABLE IF EXISTS `battles`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `battles` (
-  `id` int NOT NULL DEFAULT '0',
-  `battle_time` datetime NOT NULL,
-  `battle_type` varchar(50) DEFAULT NULL,
-  `game_mode` varchar(50) DEFAULT NULL,
-  `arena_name` varchar(50) DEFAULT NULL,
-  `deck_type` varchar(20) DEFAULT NULL,
-  `trophy_change` int DEFAULT NULL,
-  `crown_difference` int DEFAULT NULL,
-  `player_tag` varchar(20) DEFAULT NULL,
-  `opponent_tag` varchar(20) DEFAULT NULL,
-  `deck_id` int DEFAULT NULL,
-  `opponent_deck_id` int DEFAULT NULL,
-  `is_winner` tinyint(1) DEFAULT NULL,
-  `player_crowns` int DEFAULT NULL,
-  `opponent_crowns` int DEFAULT NULL,
-  `player_cards` json DEFAULT NULL,
-  `opponent_cards` json DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- Locations (regions/countries)
+CREATE TABLE locations (
+    location_id INT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    is_country BOOLEAN DEFAULT FALSE,
+    country_code VARCHAR(10)
+);
 
---
--- Table structure for table `cards`
---
+-- Players (minimal info for rankings)
+CREATE TABLE players (
+    player_tag VARCHAR(20) PRIMARY KEY,
+    name VARCHAR(50),
+    exp_level INT,
+    current_trophies INT,
+    best_trophies INT,
+    location_id INT,
+    last_seen TIMESTAMP,
+    FOREIGN KEY (location_id) REFERENCES locations(location_id) ON DELETE SET NULL
+);
 
-DROP TABLE IF EXISTS `cards`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `cards` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  `rarity` varchar(20) DEFAULT NULL,
-  `type` varchar(20) DEFAULT NULL,
-  `elixir` int DEFAULT NULL,
-  `arena` int DEFAULT NULL,
-  `description` varchar(500) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=28000027 DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- All cards in the game
+CREATE TABLE cards (
+    card_id INT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    rarity VARCHAR(20),
+    elixir_cost INT,
+    card_type VARCHAR(20),  -- troop/spell/building (derived from card_id prefix)
+    icon_url VARCHAR(255)
+);
 
---
--- Table structure for table `clans`
---
+-- Unique 8-card deck combinations
+CREATE TABLE decks (
+    deck_id INT PRIMARY KEY AUTO_INCREMENT,
+    deck_hash VARCHAR(64) UNIQUE NOT NULL,  -- SHA256 of sorted card_ids
+    avg_elixir DECIMAL(3,1),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-DROP TABLE IF EXISTS `clans`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `clans` (
-  `tag` varchar(20) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `type` varchar(20) DEFAULT NULL,
-  `description` varchar(500) DEFAULT NULL,
-  `badge_id` int DEFAULT NULL,
-  `clan_score` int DEFAULT NULL,
-  `clan_war_trophies` int DEFAULT NULL,
-  `required_trophies` int DEFAULT NULL,
-  `donations_per_week` int DEFAULT NULL,
-  `members_count` int DEFAULT NULL,
-  `location` varchar(100) DEFAULT NULL,
-  `last_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`tag`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- Many-to-many: cards in each deck
+CREATE TABLE deck_cards (
+    deck_id INT NOT NULL,
+    card_id INT NOT NULL,
+    PRIMARY KEY (deck_id, card_id),
+    FOREIGN KEY (deck_id) REFERENCES decks(deck_id) ON DELETE CASCADE,
+    FOREIGN KEY (card_id) REFERENCES cards(card_id) ON DELETE CASCADE
+);
 
---
--- Table structure for table `deck_cards`
---
+-- Meta snapshots (aggregated data collection runs)
+CREATE TABLE meta_snapshots (
+    snapshot_id INT PRIMARY KEY AUTO_INCREMENT,
+    taken_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    snapshot_type VARCHAR(30) NOT NULL,  -- 'ladder', 'top_1000', 'tournament', 'path_of_legend'
+    trophy_min INT,
+    trophy_max INT,
+    sample_size INT DEFAULT 0,  -- total battles analyzed
+    total_decks INT DEFAULT 0,  -- unique decks found
+    description VARCHAR(200)
+);
 
-DROP TABLE IF EXISTS `deck_cards`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `deck_cards` (
-  `deck_id` int NOT NULL,
-  `card_id` int NOT NULL,
-  PRIMARY KEY (`deck_id`,`card_id`),
-  KEY `card_id` (`card_id`),
-  CONSTRAINT `deck_cards_ibfk_1` FOREIGN KEY (`deck_id`) REFERENCES `decks` (`id`),
-  CONSTRAINT `deck_cards_ibfk_2` FOREIGN KEY (`card_id`) REFERENCES `cards` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- Per-deck stats within a snapshot
+CREATE TABLE deck_snapshot_stats (
+    snapshot_id INT NOT NULL,
+    deck_id INT NOT NULL,
+    games_played INT DEFAULT 0,
+    games_won INT DEFAULT 0,
+    win_rate DECIMAL(5,2),  -- percentage
+    pick_rate DECIMAL(5,2),  -- percentage of total games
+    PRIMARY KEY (snapshot_id, deck_id),
+    FOREIGN KEY (snapshot_id) REFERENCES meta_snapshots(snapshot_id) ON DELETE CASCADE,
+    FOREIGN KEY (deck_id) REFERENCES decks(deck_id) ON DELETE CASCADE
+);
 
---
--- Table structure for table `decks`
---
+-- Per-card stats within a snapshot
+CREATE TABLE card_snapshot_stats (
+    snapshot_id INT NOT NULL,
+    card_id INT NOT NULL,
+    games_played INT DEFAULT 0,
+    games_won INT DEFAULT 0,
+    win_rate DECIMAL(5,2),
+    pick_rate DECIMAL(5,2),
+    PRIMARY KEY (snapshot_id, card_id),
+    FOREIGN KEY (snapshot_id) REFERENCES meta_snapshots(snapshot_id) ON DELETE CASCADE,
+    FOREIGN KEY (card_id) REFERENCES cards(card_id) ON DELETE CASCADE
+);
 
-DROP TABLE IF EXISTS `decks`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `decks` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL,
-  `avg_elixir` float DEFAULT NULL,
-  `win_rate` float DEFAULT NULL,
-  `use_rate` float DEFAULT NULL,
-  `cards_count` int DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- ============================================
+-- LEADERBOARDS / RANKINGS
+-- ============================================
 
---
--- Table structure for table `meta_snapshots`
---
+-- Leaderboard definitions
+CREATE TABLE leaderboards (
+    leaderboard_id VARCHAR(50) PRIMARY KEY,  -- e.g., 'global', '57000249' (location id)
+    name VARCHAR(100) NOT NULL,
+    leaderboard_type VARCHAR(30) NOT NULL,   -- 'global', 'location', 'path_of_legend'
+    location_id INT,
+    FOREIGN KEY (location_id) REFERENCES locations(location_id) ON DELETE SET NULL
+);
 
-DROP TABLE IF EXISTS `meta_snapshots`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `meta_snapshots` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `snapshot_date` datetime DEFAULT NULL,
-  `trophy_range` varchar(20) DEFAULT NULL,
-  `game_mode` varchar(50) DEFAULT NULL,
-  `meta_data` json DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- Snapshots of leaderboard rankings
+CREATE TABLE leaderboard_snapshots (
+    snapshot_id INT PRIMARY KEY AUTO_INCREMENT,
+    leaderboard_id VARCHAR(50) NOT NULL,
+    taken_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    player_count INT DEFAULT 0,
+    FOREIGN KEY (leaderboard_id) REFERENCES leaderboards(leaderboard_id) ON DELETE CASCADE
+);
 
---
--- Table structure for table `players`
---
+-- Players in each leaderboard snapshot
+CREATE TABLE leaderboard_snapshot_players (
+    snapshot_id INT NOT NULL,
+    rank_position INT NOT NULL,
+    player_tag VARCHAR(20) NOT NULL,
+    trophies INT,
+    deck_id INT,  -- Their current deck at snapshot time
+    PRIMARY KEY (snapshot_id, rank_position),
+    FOREIGN KEY (snapshot_id) REFERENCES leaderboard_snapshots(snapshot_id) ON DELETE CASCADE,
+    FOREIGN KEY (player_tag) REFERENCES players(player_tag) ON DELETE CASCADE,
+    FOREIGN KEY (deck_id) REFERENCES decks(deck_id) ON DELETE SET NULL
+);
 
-DROP TABLE IF EXISTS `players`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `players` (
-  `tag` varchar(20) NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `exp_level` int DEFAULT NULL,
-  `trophies` int DEFAULT NULL,
-  `best_trophies` int DEFAULT NULL,
-  `wins` int DEFAULT NULL,
-  `losses` int DEFAULT NULL,
-  `battle_count` int DEFAULT NULL,
-  `three_crown_wins` int DEFAULT NULL,
-  `challenge_cards_won` int DEFAULT NULL,
-  `tournament_cards_won` int DEFAULT NULL,
-  `clan_tag` varchar(20) DEFAULT NULL,
-  `role` varchar(20) DEFAULT NULL,
-  `donations` int DEFAULT NULL,
-  `donations_received` int DEFAULT NULL,
-  `total_donations` int DEFAULT NULL,
-  `war_day_wins` int DEFAULT NULL,
-  `clan_cards_collected` int DEFAULT NULL,
-  `last_updated` datetime DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`tag`),
-  KEY `fk_players_clan` (`clan_tag`),
-  CONSTRAINT `fk_players_clan` FOREIGN KEY (`clan_tag`) REFERENCES `clans` (`tag`) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+-- Player's current/saved decks (from profile)
+CREATE TABLE player_decks (
+    player_tag VARCHAR(20) NOT NULL,
+    deck_id INT NOT NULL,
+    is_current BOOLEAN DEFAULT TRUE,
+    recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (player_tag, deck_id),
+    FOREIGN KEY (player_tag) REFERENCES players(player_tag) ON DELETE CASCADE,
+    FOREIGN KEY (deck_id) REFERENCES decks(deck_id) ON DELETE CASCADE
+);
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+-- ============================================
+-- TOURNAMENTS
+-- ============================================
 
--- Dump completed on 2025-12-02 13:06:41
+-- Tournament definitions
+CREATE TABLE tournaments (
+    tournament_tag VARCHAR(20) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description VARCHAR(500),
+    status VARCHAR(20),           -- 'preparation', 'inProgress', 'ended'
+    tournament_type VARCHAR(30),
+    capacity INT,
+    max_capacity INT,
+    level_cap INT,
+    game_mode_name VARCHAR(50),
+    created_time TIMESTAMP,
+    started_time TIMESTAMP,
+    first_place_prize INT,
+    collected_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tournament participants
+CREATE TABLE tournament_members (
+    tournament_tag VARCHAR(20) NOT NULL,
+    player_tag VARCHAR(20) NOT NULL,
+    rank_position INT,
+    score INT,
+    PRIMARY KEY (tournament_tag, player_tag),
+    FOREIGN KEY (tournament_tag) REFERENCES tournaments(tournament_tag) ON DELETE CASCADE,
+    FOREIGN KEY (player_tag) REFERENCES players(player_tag) ON DELETE CASCADE
+);
+
+-- ============================================
+-- BATTLES (from battlelogs)
+-- ============================================
+
+-- Individual battles from player battlelogs
+CREATE TABLE battles (
+    battle_id VARCHAR(64) PRIMARY KEY,  -- Hash of battleTime + player tags
+    battle_time TIMESTAMP NOT NULL,
+    battle_type VARCHAR(30),            -- PvP, tournament, challenge, etc.
+    game_mode VARCHAR(50),
+    arena_name VARCHAR(50),
+    is_ladder BOOLEAN DEFAULT FALSE,
+    collected_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Players in each battle (2 per battle)
+CREATE TABLE battle_players (
+    battle_id VARCHAR(64) NOT NULL,
+    team_side TINYINT NOT NULL,         -- 0 = team, 1 = opponent
+    player_tag VARCHAR(20) NOT NULL,
+    deck_id INT,
+    starting_trophies INT,
+    trophy_change INT,
+    crowns INT,
+    is_winner BOOLEAN,
+    PRIMARY KEY (battle_id, team_side),
+    FOREIGN KEY (battle_id) REFERENCES battles(battle_id) ON DELETE CASCADE,
+    FOREIGN KEY (player_tag) REFERENCES players(player_tag) ON DELETE CASCADE,
+    FOREIGN KEY (deck_id) REFERENCES decks(deck_id) ON DELETE SET NULL
+);
+
+-- ============================================
+-- INDEXES
+-- ============================================
+
+CREATE INDEX idx_deck_stats_winrate ON deck_snapshot_stats(snapshot_id, win_rate DESC);
+CREATE INDEX idx_deck_stats_pickrate ON deck_snapshot_stats(snapshot_id, pick_rate DESC);
+CREATE INDEX idx_card_stats_winrate ON card_snapshot_stats(snapshot_id, win_rate DESC);
+CREATE INDEX idx_card_stats_pickrate ON card_snapshot_stats(snapshot_id, pick_rate DESC);
+CREATE INDEX idx_snapshots_type ON meta_snapshots(snapshot_type, taken_at DESC);
+CREATE INDEX idx_leaderboard_snapshots ON leaderboard_snapshots(leaderboard_id, taken_at DESC);
+CREATE INDEX idx_tournament_status ON tournaments(status, created_time DESC);
+CREATE INDEX idx_players_trophies ON players(current_trophies DESC);
+CREATE INDEX idx_battles_time ON battles(battle_time DESC);
+CREATE INDEX idx_battles_type ON battles(battle_type, is_ladder);
+CREATE INDEX idx_battle_players_player ON battle_players(player_tag);
+CREATE INDEX idx_battle_players_deck ON battle_players(deck_id);
