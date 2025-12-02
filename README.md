@@ -12,8 +12,8 @@ A data-driven analytics platform that analyzes competitive Clash Royale battles 
 
 | Metric | Value |
 |--------|-------|
-| **Battles Analyzed** | 13,974 |
-| **Unique Players** | 291 |
+| **Battles Analyzed** | 5,000 |
+| **Unique Players** | 4,975 |
 | **Cards Tracked** | 121 |
 | **Data Period** | Oct - Dec 2025 |
 
@@ -125,12 +125,13 @@ clash-royale-meta-analysis/
 
 | Table | Description | Records |
 |-------|-------------|---------|
-| `players` | Player profiles (tag, trophies, wins, etc.) | 291 |
+| `players` | Player profiles (tag, trophies, wins, etc.) | 4,975 |
+| `clans` | Clan information (score, members, location) | 0 |
 | `cards` | Card metadata (name, rarity, elixir) | 121 |
-| `battles` | Battle outcomes with deck compositions | 13,974 |
-| `decks` | Unique deck compositions | ~8,000 |
-| `deck_cards` | Junction table (deck ↔ cards) | - |
-| `meta_snapshots` | Periodic meta statistics | - |
+| `battles` | Battle outcomes with deck compositions | 5,000 |
+| `decks` | Unique deck compositions | 0 |
+| `deck_cards` | Junction table (deck ↔ cards) | 0 |
+| `meta_snapshots` | Periodic meta statistics | 0 |
 
 ---
 
