@@ -194,8 +194,6 @@ class Tournament(Base):
     __tablename__ = 'tournaments'
     
     tournament_tag = Column(String(20), primary_key=True)
-    name = Column(String(100), nullable=False)
-    description = Column(String(500))
     status = Column(String(20))  # 'preparation', 'inProgress', 'ended'
     tournament_type = Column(String(30))
     capacity = Column(Integer)
@@ -205,12 +203,11 @@ class Tournament(Base):
     created_time = Column(DateTime)
     started_time = Column(DateTime)
     first_place_prize = Column(Integer)
-    collected_at = Column(DateTime, server_default=func.now())
     
     members = relationship("TournamentMember", back_populates="tournament", cascade="all, delete-orphan")
 
     def __repr__(self):
-        return f"<Tournament {self.name} ({self.tournament_tag})>"
+        return f"<Tournament {self.tournament_tag}>"
 
 
 class TournamentMember(Base):

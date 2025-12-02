@@ -325,15 +325,12 @@ class MetaCollector:
                 pass
         
         if existing:
-            existing.name = data.get('name', existing.name)
             existing.status = data.get('status', existing.status)
             existing.capacity = data.get('capacity', existing.capacity)
             tournament = existing
         else:
             tournament = Tournament(
                 tournament_tag=tag,
-                name=data.get('name', f'Tournament_{tag}'),
-                description=data.get('description'),
                 status=data.get('status'),
                 tournament_type=data.get('type'),
                 capacity=data.get('capacity'),

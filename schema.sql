@@ -140,8 +140,6 @@ CREATE TABLE player_decks (
 -- Tournament definitions
 CREATE TABLE tournaments (
     tournament_tag VARCHAR(20) PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    description VARCHAR(500),
     status VARCHAR(20),           -- 'preparation', 'inProgress', 'ended'
     tournament_type VARCHAR(30),
     capacity INT,
@@ -150,8 +148,7 @@ CREATE TABLE tournaments (
     game_mode_name VARCHAR(50),
     created_time TIMESTAMP,
     started_time TIMESTAMP,
-    first_place_prize INT,
-    collected_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    first_place_prize INT
 );
 
 -- Tournament participants
