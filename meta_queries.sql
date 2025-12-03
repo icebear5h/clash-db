@@ -163,10 +163,3 @@ JOIN cards c ON dc.card_id = c.card_id
 WHERE bp.starting_trophies >= 10000 AND bp.deck_id IS NOT NULL
 GROUP BY c.card_id, c.name, c.rarity, c.elixir_cost
 ORDER BY times_used DESC LIMIT 20;
-
--- 13. SUMMARY
-SELECT 'BATTLES' AS metric, COUNT(*) AS value FROM battles
-UNION SELECT 'DECKS', COUNT(*) FROM decks
-UNION SELECT 'PLAYERS', COUNT(*) FROM players
-UNION SELECT 'TOURNAMENT_MEMBERS', COUNT(*) FROM tournament_members
-UNION SELECT 'LEADERBOARD_PLAYERS', COUNT(*) FROM leaderboard_snapshot_players;
