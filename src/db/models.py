@@ -17,7 +17,6 @@ class Location(Base):
     is_country = Column(Boolean, default=False)
     country_code = Column(String(10))
     
-    leaderboards = relationship("Leaderboard", back_populates="location")
 
     def __repr__(self):
         return f"<Location {self.name} ({self.location_id})>"
@@ -28,7 +27,6 @@ class Player(Base):
     
     player_tag = Column(String(20), primary_key=True)
     
-    leaderboard_entries = relationship("LeaderboardSnapshotPlayer", back_populates="player")
     tournament_entries = relationship("TournamentMember", back_populates="player")
     decks = relationship("PlayerDeck", back_populates="player")
     battle_entries = relationship("BattlePlayer", back_populates="player")
@@ -124,54 +122,6 @@ class CardSnapshotStats(Base):
     
     snapshot = relationship("MetaSnapshot", back_populates="card_stats")
     card = relationship("Card", back_populates="snapshot_stats")
-
-
-# ============================================
-# LEADERBOARDS / RANKINGS
-# ============================================
-
-class Leaderboard(Base):
-    __tablename__ = 'leaderboards'
-    
-    leaderboard_id = Column(String(50), primary_key=True)
-    name = Column(String(100), nullable=False)
-    leaderboard_type = Column(String(30), nullable=False)  # 'global', 'location', 'path_of_legend'
-    location_id = Column(Integer, ForeignKey('locations.location_id', ondelete='SET NULL'))
-    
-    location = relationship("Location", back_populates="leaderboards")
-    snapshots = relationship("LeaderboardSnapshot", back_populates="leaderboard", cascade="all, delete-orphan")
-
-    def __repr__(self):
-        return f"<Leaderboard {self.name} ({self.leaderboard_id})>"
-
-
-class LeaderboardSnapshot(Base):
-    __tablename__ = 'leaderboard_snapshots'
-    
-    snapshot_id = Column(Integer, primary_key=True, autoincrement=True)
-    leaderboard_id = Column(String(50), ForeignKey('leaderboards.leaderboard_id', ondelete='CASCADE'), nullable=False)
-    taken_at = Column(DateTime, server_default=func.now())
-    player_count = Column(Integer, default=0)
-    
-    leaderboard = relationship("Leaderboard", back_populates="snapshots")
-    players = relationship("LeaderboardSnapshotPlayer", back_populates="snapshot", cascade="all, delete-orphan")
-
-    def __repr__(self):
-        return f"<LeaderboardSnapshot {self.snapshot_id} ({self.leaderboard_id})>"
-
-
-class LeaderboardSnapshotPlayer(Base):
-    __tablename__ = 'leaderboard_snapshot_players'
-    
-    snapshot_id = Column(Integer, ForeignKey('leaderboard_snapshots.snapshot_id', ondelete='CASCADE'), primary_key=True)
-    rank_position = Column(Integer, primary_key=True)
-    player_tag = Column(String(20), ForeignKey('players.player_tag', ondelete='CASCADE'), nullable=False)
-    trophies = Column(Integer)
-    deck_id = Column(Integer, ForeignKey('decks.deck_id', ondelete='SET NULL'))
-    
-    snapshot = relationship("LeaderboardSnapshot", back_populates="players")
-    player = relationship("Player", back_populates="leaderboard_entries")
-    deck = relationship("Deck")
 
 
 class PlayerDeck(Base):

@@ -29,9 +29,6 @@ TABLES = [
     'meta_snapshots',
     'deck_snapshot_stats',
     'card_snapshot_stats',
-    'leaderboards',
-    'leaderboard_snapshots',
-    'leaderboard_snapshot_players',
     'tournaments',
     'tournament_members'
 ]

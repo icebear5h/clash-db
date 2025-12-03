@@ -1,5 +1,5 @@
 -- Clash Royale Meta Database Schema
--- Tracks decks, meta snapshots, leaderboards, and tournaments
+-- Tracks decks, meta snapshots, and tournaments
 
 DROP DATABASE IF EXISTS clash_meta;
 CREATE DATABASE clash_meta;
@@ -87,41 +87,6 @@ CREATE TABLE card_snapshot_stats (
     FOREIGN KEY (card_id) REFERENCES cards(card_id) ON DELETE CASCADE
 );
 
--- ============================================
--- LEADERBOARDS / RANKINGS
--- ============================================
-
--- Leaderboard definitions
-CREATE TABLE leaderboards (
-    leaderboard_id VARCHAR(50) PRIMARY KEY,  -- e.g., 'global', '57000249' (location id)
-    name VARCHAR(100) NOT NULL,
-    leaderboard_type VARCHAR(30) NOT NULL,   -- 'global', 'location', 'path_of_legend'
-    location_id INT,
-    FOREIGN KEY (location_id) REFERENCES locations(location_id) ON DELETE SET NULL
-);
-
--- Snapshots of leaderboard rankings
-CREATE TABLE leaderboard_snapshots (
-    snapshot_id INT PRIMARY KEY AUTO_INCREMENT,
-    leaderboard_id VARCHAR(50) NOT NULL,
-    taken_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    player_count INT DEFAULT 0,
-    FOREIGN KEY (leaderboard_id) REFERENCES leaderboards(leaderboard_id) ON DELETE CASCADE
-);
-
--- Players in each leaderboard snapshot
-CREATE TABLE leaderboard_snapshot_players (
-    snapshot_id INT NOT NULL,
-    rank_position INT NOT NULL,
-    player_tag VARCHAR(20) NOT NULL,
-    trophies INT,
-    deck_id INT,  -- Their current deck at snapshot time
-    PRIMARY KEY (snapshot_id, rank_position),
-    FOREIGN KEY (snapshot_id) REFERENCES leaderboard_snapshots(snapshot_id) ON DELETE CASCADE,
-    FOREIGN KEY (player_tag) REFERENCES players(player_tag) ON DELETE CASCADE,
-    FOREIGN KEY (deck_id) REFERENCES decks(deck_id) ON DELETE SET NULL
-);
-
 -- Player's current/saved decks (from profile)
 CREATE TABLE player_decks (
     player_tag VARCHAR(20) NOT NULL,
@@ -200,7 +165,6 @@ CREATE INDEX idx_deck_stats_pickrate ON deck_snapshot_stats(snapshot_id, pick_ra
 CREATE INDEX idx_card_stats_winrate ON card_snapshot_stats(snapshot_id, win_rate DESC);
 CREATE INDEX idx_card_stats_pickrate ON card_snapshot_stats(snapshot_id, pick_rate DESC);
 CREATE INDEX idx_snapshots_type ON meta_snapshots(snapshot_type, taken_at DESC);
-CREATE INDEX idx_leaderboard_snapshots ON leaderboard_snapshots(leaderboard_id, taken_at DESC);
 CREATE INDEX idx_tournament_status ON tournaments(status, created_time DESC);
 CREATE INDEX idx_battles_type ON battles(battle_type, is_ladder);
 CREATE INDEX idx_battle_players_player ON battle_players(player_tag);
